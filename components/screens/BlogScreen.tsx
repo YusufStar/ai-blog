@@ -121,6 +121,8 @@ export function BlogScreen({ posts }: BlogScreenProps) {
 function BlogCard({ post, layout, delay }: { post: BlogPost; layout: "grid" | "list"; delay: number }) {
     const router = useRouter();
 
+    console.log(post);
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -138,7 +140,7 @@ function BlogCard({ post, layout, delay }: { post: BlogPost; layout: "grid" | "l
                     layout === "grid" ? "aspect-[16/9]" : "w-1/3"
                 )}>
                     <img
-                        src={post.imageUrl}
+                        src={"https://www.digiexam.com/hs-fs/hubfs/Digiexam_AI%20in%20education_Illustration_v1.2.png?width=1920&name=Digiexam_AI%20in%20education_Illustration_v1.2.png"}
                         alt={post.title}
                         className="object-cover w-full h-full transition-transform duration-500 ease-out group-hover:scale-[1.02]"
                     />
@@ -162,10 +164,10 @@ function BlogCard({ post, layout, delay }: { post: BlogPost; layout: "grid" | "l
                 )}>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
                         <span className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" /> {post.readTime}
+                            <Clock className="h-3 w-3" /> 5 min read
                         </span>
                         <span className="w-1 h-1 rounded-full bg-muted-foreground" />
-                        <span>{post.date}</span>
+                        <span>Apr 15, 2024</span>
                     </div>
                     
                     <h3 className={cn(

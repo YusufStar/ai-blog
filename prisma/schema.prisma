@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
+}
+
+model User {
+    id           String    @id @default(uuid())
+    name         String
+    email        String    @unique
+    password     String // Hashed password
+    role         String    @default("user")
+    avatar       String?
+    createdAt    DateTime  @default(now())
+    updatedAt    DateTime  @updatedAt
+    status       String    @default("active")
+    lastLogin    DateTime?
+    refreshToken String? // JWT refresh token için
+
+    // Relations
+    questions Question[]
+    answers   Answer[]
+    posts     BlogPost[]
+}
+
+model Question {
+    id        String   @id @default(uuid())
+    title     String
+    content   String
+    tags      String[]
+    votes     Int      @default(0)
+    views     Int      @default(0)
+    solved    Boolean  @default(false)
+    status    String   @default("active")
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Relations
+    author   User     @relation(fields: [authorId], references: [id])
+    authorId String
+    answers  Answer[]
+}
+
+model Answer {
+    id        String   @id @default(uuid())
+    content   String
+    votes     Int      @default(0)
+    accepted  Boolean  @default(false)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Relations
+    author     User     @relation(fields: [authorId], references: [id])
+    authorId   String
+    question   Question @relation(fields: [questionId], references: [id])
+    questionId String
+}
+
+model BlogPost {
+    id          String    @id @default(uuid())
+    title       String
+    slug        String    @unique
+    excerpt     String
+    content     String
+    category    String
+    tags        String[]
+    status      String    @default("draft")
+    views       Int       @default(0)
+    publishedAt DateTime?
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+
+    // Relations
+    author   User   @relation(fields: [authorId], references: [id])
+    authorId String
+}
+
+model Stats {
+    id             String   @id @default(uuid())
+    totalUsers     Int      @default(0)
+    totalQuestions Int      @default(0)
+    totalAnswers   Int      @default(0)
+    totalPosts     Int      @default(0)
+    activeUsers    Int      @default(0)
+    questionsToday Int      @default(0)
+    answersToday   Int      @default(0)
+    postsToday     Int      @default(0)
+    updatedAt      DateTime @updatedAt
+}
